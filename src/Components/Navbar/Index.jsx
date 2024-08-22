@@ -1,9 +1,11 @@
 import React from 'react'
 import { FriendsIcon, MessageIcon } from '../../svg/Friends'
 import { CameraIcon } from '../../svg/Camera'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 const Navbar = () => {
+  let location = useLocation() 
+  
   return (
     <div className='flex justify-around p-2 text-white bg-[#232323]'>
         <div className='flex justify-center items-center '>
@@ -15,10 +17,10 @@ const Navbar = () => {
             <div className='ml-5'><span>MD Rifatul Islam</span></div>
         </div>
         <div className='text-orange-300 flex justify-center items-center gap-5'>
-          <Link to='/' className='w-10 h-10 rounded-full bg-white flex justify-center items-center'>
+          <Link to='/' className={`${location.pathname == "/" ? "text-white bg-[#6CD0FB] " : "text-[#292D32] bg-white  " } w-10 h-10 rounded-full  flex justify-center items-center`}>
                 <FriendsIcon/>
           </Link>
-          <Link to='/message' className='w-10 h-10 rounded-full bg-white flex justify-center items-center'>                 
+          <Link to='/message'  className={`${location.pathname == "/message" ? "text-white bg-[#6CD0FB] " : "text-[#292D32] bg-white  " } w-10 h-10 rounded-full  flex justify-center items-center`}>                 
                 <MessageIcon/>
           </Link>
         </div>

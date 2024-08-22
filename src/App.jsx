@@ -7,6 +7,7 @@ import Login from './page/Login';
 import Home from './page/Home'; 
 import LoggedInUserRoute from './PrivateRoute/LoggedInUser';
 import NotLoggedInUserRoute from './PrivateRoute/NotLoggedInUser';
+import Message from './page/Message';
 
 function App() {  
   let router = createBrowserRouter( 
@@ -14,6 +15,7 @@ function App() {
       <Route>
         <Route element={<LoggedInUserRoute/>}>
         <Route path='/' element={<Home/>}></Route>
+        <Route path='/message' element={<Message/>}></Route>
         </Route>
         <Route element={<NotLoggedInUserRoute/>}>
         <Route path='/registration' element={<Registration/>}></Route>

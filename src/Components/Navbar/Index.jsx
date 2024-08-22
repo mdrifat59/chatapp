@@ -1,10 +1,27 @@
 import React from 'react'
 import { FriendsIcon, MessageIcon } from '../../svg/Friends'
 import { CameraIcon } from '../../svg/Camera'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { getAuth, signOut } from "firebase/auth";
+import { useDispatch } from 'react-redux';
+import { logOutUser } from '../../featuers/slice/LoginSlice';
 
 const Navbar = () => {
   let location = useLocation() 
+  const auth = getAuth();
+  let navigate = useNavigate()
+  let dispatch = useDispatch()
+
+  let handleLogout =()=>{
+    signOut(auth).then(() => {
+       navigate("/login");
+       localStorage.removeItem("login");
+      dispatch(logOutUser());
+    }).catch((error) => {
+       console.log(error);
+       
+    });
+  }
   
   return (
     <div className='flex justify-around p-2 text-white bg-[#232323]'>
@@ -25,7 +42,7 @@ const Navbar = () => {
           </Link>
         </div>
         <div className='flex justify-center items-center'>
-          <button className='bg-blue-400 py-2 px-5 rounded-md'>LogOut</button>
+          <button className='bg-blue-400 py-2 px-5 rounded-md' onClick={handleLogout}>LogOut</button>
         </div>
     </div>
   )

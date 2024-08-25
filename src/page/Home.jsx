@@ -1,6 +1,7 @@
 import React from 'react'  
 import UserList from '../Components/UserList'
 import FriendRequest from '../Components/FriendRequst/Index'
+import Friends from '../Components/Friends'
 
 const Home = () => {
   return (
@@ -13,7 +14,9 @@ const Home = () => {
            <div className='w-full shadow-lg '>
             <FriendRequest/>
            </div>
-           <div className='w-full bg-slate-800'>adfadf</div>
+           <div className='w-full shadow-lg'>
+              <Friends/>
+           </div>
         </div>
       </div>
     </>

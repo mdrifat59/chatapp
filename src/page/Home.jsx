@@ -1,14 +1,20 @@
 import React from 'react'  
 import UserList from '../Components/UserList'
+import FriendRequest from '../Components/FriendRequst/Index'
 
 const Home = () => {
   return (
     <>
-      <div className='grid grid-cols-[2fr,4fr]'>
+      <div className='grid grid-cols-[2fr,5fr]'>
         <div className='w-full h-full bg-white shadow-lg'>
           <UserList/>
         </div>
-        <div className='w-full h-full bg-gray-400'>adfkdfjaldfk</div>
+        <div className='w-full grid grid-cols-[4fr,3fr] gap-x-2'>
+           <div className='w-full shadow-lg '>
+            <FriendRequest/>
+           </div>
+           <div className='w-full bg-slate-800'>adfadf</div>
+        </div>
       </div>
     </>
   )

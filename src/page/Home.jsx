@@ -1,9 +1,15 @@
 import React from 'react'  
+import UserList from '../Components/UserList'
 
 const Home = () => {
   return (
     <>
-       <h1>home page</h1>
+      <div className='grid grid-cols-[2fr,4fr]'>
+        <div className='w-full h-full bg-white shadow-lg'>
+          <UserList/>
+        </div>
+        <div className='w-full h-full bg-gray-400'>adfkdfjaldfk</div>
+      </div>
     </>
   )
 }

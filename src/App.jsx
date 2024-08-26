@@ -9,6 +9,7 @@ import LoggedInUserRoute from './PrivateRoute/LoggedInUser';
 import NotLoggedInUserRoute from './PrivateRoute/NotLoggedInUser';
 import Message from './page/Message';
 import RootLayout from './Components/RootLayout/RootLayout';
+import "cropperjs/dist/cropper.css";
 
 function App() {  
   let router = createBrowserRouter( 

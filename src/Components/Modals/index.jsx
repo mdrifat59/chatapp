@@ -2,14 +2,23 @@ import React, { useRef, useState } from 'react'
 import { CrossIcon } from '../../svg/Cross'
 import { UploadImageIcon } from '../../svg/Upload'
 import ImageCropper from '../ImageCropper'
+import { getDownloadURL, getStorage, ref, uploadString } from "firebase/storage";
+import { useDispatch, useSelector } from 'react-redux';
+import { getAuth, updateProfile } from 'firebase/auth';
+import { loggedInUser } from '../../featuers/slice/LoginSlice';
 
 const Modals = ({ setShow }) => {
+  let user = useSelector((user) => user.login.loggedIn)
+  const storage = getStorage();
+  const storageRef = ref(storage, user.uid);
   let fileref = useRef(null)
   const [image, setImage] = useState();
   const [cropData, setCropData] = useState();
   const cropperRef = useRef();
+  const auth = getAuth();
+  let dispatch = useDispatch()
 
-  let handleChange= (e)=>{
+  let handleChange = (e) => {
     e.preventDefault();
     let files;
     if (e.dataTransfer) {
@@ -19,15 +28,26 @@ const Modals = ({ setShow }) => {
     }
     const reader = new FileReader();
     reader.onload = () => {
-      setImage(reader.result); 
-      
+      setImage(reader.result);
+
     };
-    reader.readAsDataURL(files[0]);  
+    reader.readAsDataURL(files[0]);
   }
 
   const getCropData = () => {
     if (typeof cropperRef.current?.cropper !== "undefined") {
       setCropData(cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
+      const message4 = cropperRef.current?.cropper.getCroppedCanvas().toDataURL();
+      uploadString(storageRef, message4, 'data_url').then((snapshot) => {
+        getDownloadURL(storageRef).then((downloadURL) => {
+          updateProfile(auth.currentUser, {
+            photoURL: downloadURL,
+          }).then(() => {
+            dispatch(loggedInUser({ ...user, photoURL: downloadURL }))
+            localStorage.setItem('login', JSON.stringify({ ...user, photoURL: downloadURL }))
+          })
+        });
+      });
     }
   };
   return (
@@ -41,7 +61,7 @@ const Modals = ({ setShow }) => {
             </div>
           </div>
           <div className='w-full h-[200px] bg-slate-400 rounded-md border box-border mt-5 p-2'>
-            <div className='w-full h-full bg-slate-200 flex justify-center items-center rounded-md cursor-pointer' onClick={()=>fileref.current.click()}>
+            <div className='w-full h-full bg-slate-200 flex justify-center items-center rounded-md cursor-pointer' onClick={() => fileref.current.click()}>
               <div>
                 <div className='flex justify-center'>
                   <UploadImageIcon />
@@ -52,9 +72,14 @@ const Modals = ({ setShow }) => {
             </div>
           </div>
         </div>
-            { image && <ImageCropper setImage={setImage} image={image} cropperRef={cropperRef} getCropData={getCropData} />
-            
-            }
+        {image &&
+          <ImageCropper
+            setImage={setImage}
+            image={image}
+            cropperRef={cropperRef}
+            getCropData={getCropData}
+          />
+        }
       </div>
     </>
   )

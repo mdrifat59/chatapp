@@ -7,7 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAuth, updateProfile } from 'firebase/auth';
 import { loggedInUser } from '../../featuers/slice/LoginSlice';
 
-const Modals = ({ setShow }) => {
+
+const Modals = ({ setShow, }) => {
   let user = useSelector((user) => user.login.loggedIn)
   const storage = getStorage();
   const storageRef = ref(storage, user.uid);
@@ -17,6 +18,7 @@ const Modals = ({ setShow }) => {
   const cropperRef = useRef();
   const auth = getAuth();
   let dispatch = useDispatch()
+  let [loader, setLoader]=useState(false)
 
   let handleChange = (e) => {
     e.preventDefault();
@@ -39,16 +41,19 @@ const Modals = ({ setShow }) => {
       setCropData(cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
       const message4 = cropperRef.current?.cropper.getCroppedCanvas().toDataURL();
       uploadString(storageRef, message4, 'data_url').then((snapshot) => {
+        setLoader(true)
         getDownloadURL(storageRef).then((downloadURL) => {
           updateProfile(auth.currentUser, {
             photoURL: downloadURL,
           }).then(() => {
             dispatch(loggedInUser({ ...user, photoURL: downloadURL }))
             localStorage.setItem('login', JSON.stringify({ ...user, photoURL: downloadURL }))
+            setLoader(false)
           })
         });
       });
     }
+    setShow(false)
   };
   return (
     <>
@@ -78,6 +83,7 @@ const Modals = ({ setShow }) => {
             image={image}
             cropperRef={cropperRef}
             getCropData={getCropData}
+            loader={loader}
           />
         }
       </div>

@@ -3,10 +3,11 @@ import { FriendsIcon, MessageIcon } from '../../svg/Friends'
 import { CameraIcon } from '../../svg/Camera'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { getAuth, signOut } from "firebase/auth";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logOutUser } from '../../featuers/slice/LoginSlice';
 import { createPortal } from 'react-dom';
-import Modals from '../Modals';
+import Modals from '../Modals'; 
+import img from '../../assets/defaultimg/image.jpg'
 
 const Navbar = () => {
   let location = useLocation() 
@@ -14,30 +15,34 @@ const Navbar = () => {
   let navigate = useNavigate()
   let dispatch = useDispatch()
   let [show, setShow]=useState(false)
+  let selector = useSelector((state)=>state.login.loggedIn)
+  
 
   let handleLogout =()=>{
     signOut(auth).then(() => {
-       navigate("/login");
-       localStorage.removeItem("login");
+      localStorage.removeItem("login");
       dispatch(logOutUser());
+      navigate("/login");
     }).catch((error) => {
-       console.log(error);
-       
+       console.log(error);       
     });
-  }
+  } 
+  
   
   return (
     <>
     <div className='flex justify-around p-2 text-white bg-[#232323]'>
         <div className='flex justify-center items-center '>
             <div className='w-14 h-14 rounded-full bg-[#D9D9D9] relative'>
+              <img  src={selector.photoURL || img } className='rounded-full w-full h-full object-cover' alt="" />
+              
               <div className='w-4 h-4 rounded-full bg-white text-black flex justify-center items-center absolute bottom-0 right-0 text-2xl' onClick={()=>setShow(true)}>
                   <CameraIcon />
               </div>
             </div>
             <div className='ml-5'><span>MD Rifatul Islam</span></div>
         </div>
-        <div className='text-orange-300 flex justify-center items-center gap-5'>
+        <div className=' flex justify-center items-center gap-5'>
           <Link to='/' className={`${location.pathname == "/" ? "text-white bg-[#6CD0FB] " : "text-[#292D32] bg-white  " } w-10 h-10 rounded-full  flex justify-center items-center`}>
                 <FriendsIcon/>
           </Link>
@@ -50,7 +55,7 @@ const Navbar = () => {
         </div>
     </div>
     {show && createPortal(
-   <Modals setShow={setShow}/>,
+   <Modals setShow={setShow} />,
     document.body
       
     )}

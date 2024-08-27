@@ -1,8 +1,9 @@
 import React from 'react'
 import { CrossIcon } from '../../svg/Cross'
 import { Cropper } from 'react-cropper'
+import { ClipLoader } from 'react-spinners';
 
-const ImageCropper = ({ setImage, image, cropperRef, getCropData }) => {
+const ImageCropper = ({ setImage, image, cropperRef, getCropData, loader }) => {
   return (
     <>
       <div className='fixed top-0 left-0 w-full h-screen   flex justify-center items-center'>
@@ -39,7 +40,7 @@ const ImageCropper = ({ setImage, image, cropperRef, getCropData }) => {
               guides={true}
             />
           </div>
-            <button className='bg-[#6CD0FB] w-full p-2 rounded-md font-robotoBold' onClick={getCropData}>Upload</button>         
+            <button className='bg-[#6CD0FB] w-full p-2 rounded-md font-robotoBold' onClick={getCropData}>{ loader?<ClipLoader/> : "Upload"}</button>         
 
         </div>
       </div>

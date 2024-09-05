@@ -78,9 +78,12 @@ const UserList = () => {
               <div className='font-robotoBold'>{item.username}</div>
             </div>
             {
-              friendrequestlist.includes(item.id + usered.uid) || friendrequestlist.includes(usered.uid + item.id) ?
+              friendrequestlist.includes(usered.uid + item.id)  ?
                 <button className='bg-red-400 py-1 px-3 rounded-md' >Cencel</button>
                 :
+                 friendrequestlist.includes(item.id + usered.uid) ?
+                 <button className='bg-gray-300 py-1 px-3 rounded-md'>Pending</button>
+                 :
                 <div onClick={() => handleRequst(item)}>
                   <button><AddFriendIcon /></button>
                 </div>

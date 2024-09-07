@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { AddFriendIcon } from '../svg/AddFriend'
-import { getDatabase, ref, onValue, set, push } from "firebase/database";
+import { getDatabase, ref, onValue, set, push, remove } from "firebase/database";
 import { useSelector } from 'react-redux';
 import { getDownloadURL, getStorage, ref as Ref } from 'firebase/storage';
 import avaterImg from "../assets/defaultimg/profile.png"
@@ -10,7 +10,8 @@ const UserList = () => {
   let usered = useSelector((state) => state.login.loggedIn)
   const storage = getStorage();
   let [users, setUsers] = useState([])
-  let [friendrequestlist, setFriendrequestlist] = useState([])
+  let [friendrequestlist, setFriendrequestlist] = useState([]) 
+  let [cencelReq, setCencelReq] = useState([]) 
 
   useEffect(() => {
     const userListRef = ref(db, 'users/');
@@ -56,13 +57,20 @@ const UserList = () => {
     const friendRequestRef = ref(db, 'friendrequest/');
     onValue(friendRequestRef, (snapshot) => {
       let reqarr = []
+      let cencelarr = []
       snapshot.forEach((item) => {
         reqarr.push(item.val().senderid + item.val().receiverid)
-
+        cencelarr.push({...item.val(), id:item.key})
       })
       setFriendrequestlist(reqarr)
+      setCencelReq(cencelarr)
     });
   }, [db])
+
+  let handleCencel =(itemid)=>{
+     let reqtocencel = cencelReq.find((req)=> req.receiverid == itemid)
+     remove(ref(db, 'friendrequest/'+ reqtocencel.id))  
+  }
 
   return (
     <div className='p-4'>
@@ -79,7 +87,7 @@ const UserList = () => {
             </div>
             {
               friendrequestlist.includes(usered.uid + item.id)  ?
-                <button className='bg-red-400 py-1 px-3 rounded-md' >Cencel</button>
+                <button className='bg-red-400 py-1 px-3 rounded-md' onClick={()=>handleCencel(item.id)}  >Cencel</button>
                 :
                  friendrequestlist.includes(item.id + usered.uid) ?
                  <button className='bg-gray-300 py-1 px-3 rounded-md'>Pending</button>

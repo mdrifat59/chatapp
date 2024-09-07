@@ -1,6 +1,6 @@
 import React from 'react'
 
-const FriendRequest = () => {
+const FriendRequest = () => {  
   return (
      <div className='p-5 '>
         <h1 className='font-robotoRegular text-2xl m-y-5'> Friend Requests</h1>

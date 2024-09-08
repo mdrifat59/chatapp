@@ -37,8 +37,10 @@ const FriendRequest = () => {
     <div className='p-5'>
       <h1 className='font-robotoRegular text-2xl m-y-5'> Friend Requests</h1>
       {
-        friendreq.length == 0 ?
-          <h3 className='flex justify-center items-center text-2xl'>No Friend Requst</h3>
+        friendreq.length == 0 ? 
+          <div className='flex justify-center items-center h-40'>
+          <h3 className='text-2xl'>No Friend Requst</h3>
+        </div>
           :
           friendreq.map((item) => (
             <div key={item.id} className='flex items-center justify-between mt-5'>

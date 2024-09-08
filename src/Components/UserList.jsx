@@ -10,8 +10,9 @@ const UserList = () => {
   let usered = useSelector((state) => state.login.loggedIn)
   const storage = getStorage();
   let [users, setUsers] = useState([])
-  let [friendrequestlist, setFriendrequestlist] = useState([]) 
-  let [cencelReq, setCencelReq] = useState([]) 
+  let [friendrequestlist, setFriendrequestlist] = useState([])
+  let [cencelReq, setCencelReq] = useState([])
+  let [friends, setFriends] = useState([])
 
   useEffect(() => {
     const userListRef = ref(db, 'users/');
@@ -60,24 +61,39 @@ const UserList = () => {
       let cencelarr = []
       snapshot.forEach((item) => {
         reqarr.push(item.val().senderid + item.val().receiverid)
-        cencelarr.push({...item.val(), id:item.key})
+        cencelarr.push({ ...item.val(), id: item.key })
       })
       setFriendrequestlist(reqarr)
       setCencelReq(cencelarr)
     });
   }, [db])
 
-  let handleCencel =(itemid)=>{
-     let reqtocencel = cencelReq.find((req)=> req.receiverid == itemid)
-     remove(ref(db, 'friendrequest/'+ reqtocencel.id))  
-  }
+  // show friends
+  useEffect(() => {
+    const friendRequestRef = ref(db, 'friends/');
+    onValue(friendRequestRef, (snapshot) => {
+      let arr = []
+      snapshot.forEach((item) => {
+        if (item.val().senderid == usered.uid || item.val().receiverid == usered.uid) {
 
+          arr.push(item.val().senderid == usered.uid ? item.val().receiverid : item.val().senderid)
+        }
+      })
+      setFriends(arr)
+    });
+  }, [db])
+
+  let handleCencel = (itemid) => {
+    let reqtocencel = cencelReq.find((req) => req.receiverid == itemid)
+    remove(ref(db, 'friendrequest/' + reqtocencel.id))
+  }
+  let filteruser = users.filter((user) => !friends.includes(user.id))
   return (
     <div className='p-4'>
       <h1 className='font-robotoRegular text-2xl m-y-5'>All Users</h1>
 
       {
-        users.map((item) => (
+        filteruser.map((item) => (
           <div key={item.id} className='flex items-center justify-between mt-5'>
             <div className='flex items-center gap-x-2'>
               <div className='w-12 h-12 rounded-full bg-blue-300 overflow-hidden'>
@@ -86,15 +102,15 @@ const UserList = () => {
               <div className='font-robotoBold'>{item.username}</div>
             </div>
             {
-              friendrequestlist.includes(usered.uid + item.id)  ?
-                <button className='bg-red-400 py-1 px-3 rounded-md' onClick={()=>handleCencel(item.id)}  >Cencel</button>
+              friendrequestlist.includes(usered.uid + item.id) ?
+                <button className='bg-red-400 py-1 px-3 rounded-md' onClick={() => handleCencel(item.id)}  >Cencel</button>
                 :
-                 friendrequestlist.includes(item.id + usered.uid) ?
-                 <button className='bg-gray-300 py-1 px-3 rounded-md'>Pending</button>
-                 :
-                <div onClick={() => handleRequst(item)}>
-                  <button><AddFriendIcon /></button>
-                </div>
+                friendrequestlist.includes(item.id + usered.uid) ?
+                  <button className='bg-gray-300 py-1 px-3 rounded-md'>Pending</button>
+                  :
+                  <div onClick={() => handleRequst(item)}>
+                    <button><AddFriendIcon /></button>
+                  </div>
             }
           </div>
         ))

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { getDatabase, ref, onValue, remove } from "firebase/database";
+import { getDatabase, ref, onValue, remove, set, push } from "firebase/database";
 import { useSelector } from 'react-redux';
 
 const FriendRequest = () => {
@@ -24,6 +24,15 @@ const FriendRequest = () => {
     remove(ref(db, 'friendrequest/' + itemid));
   }
 
+  let handleAccept = (item) => {
+    set(push(ref(db, 'friends/')), {
+      ...item
+    }).then(() => {
+      remove(ref(db, "friendrequest/" + item.id))
+    })
+
+  }
+
   return (
     <div className='p-5'>
       <h1 className='font-robotoRegular text-2xl m-y-5'> Friend Requests</h1>
@@ -40,7 +49,7 @@ const FriendRequest = () => {
                 <div className='font-robotoRegular text-base'>{item.sendername}</div>
               </div>
               <div className='flex justify-center gap-2 text-white'>
-                <button className='py-1 px-4 bg-[#4A81D3] rounded-md'>Accept</button>
+                <button className='py-1 px-4 bg-[#4A81D3] rounded-md' onClick={() => handleAccept(item)}>Accept</button>
                 <button className='py-1 px-4 bg-[#D34A4A] rounded-md' onClick={() => handleReject(item.id)}>Reject</button>
               </div>
             </div>

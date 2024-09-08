@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { getDatabase, ref, onValue } from "firebase/database";
 import { useSelector } from 'react-redux';
 
@@ -7,6 +7,7 @@ const Friends = () => {
   let location = useLocation()
   const db = getDatabase();
   let usered = useSelector((state) => state.login.loggedIn)
+  let navigate = useNavigate()
   let [friendarr, setFriendarr] = useState([])
 
   useEffect(() => {
@@ -20,7 +21,7 @@ const Friends = () => {
       })
       setFriendarr(arr)
     })
-  }, [db, usered.uid])
+  }, [db, usered.uid])  
   return (
     <div className='p-5 '>
       <h1 className='font-robotoRegular text-2xl m-y-5'> Friends </h1>
@@ -54,7 +55,7 @@ const Friends = () => {
             {
               location.pathname == "/" &&
               <div className='flex justify-center gap-2 text-white'>
-                <button className='py-1 px-4 bg-[#4A81D3] rounded-md'>Message</button>
+                <button className='py-1 px-4 bg-[#4A81D3] rounded-md' onClick={()=>{navigate("/message")}}>Message</button>
               </div>
             }
           </div>

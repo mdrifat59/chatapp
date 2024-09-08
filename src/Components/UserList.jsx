@@ -3,7 +3,7 @@ import { AddFriendIcon } from '../svg/AddFriend'
 import { getDatabase, ref, onValue, set, push, remove } from "firebase/database";
 import { useSelector } from 'react-redux';
 import { getDownloadURL, getStorage, ref as Ref } from 'firebase/storage';
-import avaterImg from "../assets/defaultimg/profile.png"
+import avaterImg from "../assets/defaultimg/profile.png" 
 
 const UserList = () => {
   const db = getDatabase();
@@ -46,10 +46,10 @@ const UserList = () => {
     set(push(ref(db, "friendrequest/")), {
       sendername: usered.displayName,
       senderid: usered.uid,
-      senderphoto: usered.photoURL ?? "/src/assets/profile.png",
+      senderphoto: usered.photoURL ?? "/src/assets/defaultimg/profile.png",
       receivername: data.username,
       receiverid: data.id,
-      receiverphoto: data.photoURL ?? "/src/assets/profile.png",
+      receiverphoto: data.photoURL ?? "/src/assets/defaultimg/profile.png",
     })
   }
 
@@ -90,7 +90,7 @@ const UserList = () => {
   let filteruser = users.filter((user) => !friends.includes(user.id))
   return (
     <div className='p-4'>
-      <h1 className='font-robotoRegular text-2xl m-y-5'>All Users</h1>
+      <h1 className='font-robotoRegular text-2xl m-y-5'>All Users</h1> 
 
       {
         filteruser.map((item) => (

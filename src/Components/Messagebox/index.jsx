@@ -3,15 +3,19 @@ import { EmojiIcon } from '../../svg/Emoji'
 import { ImageIcon } from '../../svg/Image'
 import msgimg from '../../assets/trail.jpg'
 import msgimg2 from '../../assets/trail2.jpg'
+import { useSelector } from 'react-redux'
 
 const MessageBox = () => {
+    let singlefriend = useSelector((single)=>single.active.active)
   return (
     <div className='w-full bg-white'>
         <div className=' bg-[#232323] py-2 rounded-md mx-5 mt-3 '> 
             <div className='ml-5 flex items-center gap-5'>
-                <div className='w-11 h-11 bg-orange-300 rounded-full'></div>
+                <div className='w-11 h-11 bg-orange-300 rounded-full'>
+                    <img src={singlefriend.profile} className='w-full h-full rounded-full overflow-hidden' alt="" />
+                </div>
                 <div className='text-white'>
-                    <span className='font-robotoRegular'>MD Rifat</span>
+                    <span className='font-robotoRegular'>{singlefriend.name || "choose your friend"}</span>
                 </div>
             </div>
         </div>

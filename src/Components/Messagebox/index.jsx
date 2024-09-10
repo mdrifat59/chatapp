@@ -6,13 +6,15 @@ import msgimg2 from '../../assets/trail2.jpg'
 import { useSelector } from 'react-redux'
 import { getDatabase, onValue, push, ref, set } from 'firebase/database'
 import { formatDistance } from 'date-fns'
+import EmojiPicker from 'emoji-picker-react'
 
 const MessageBox = () => {
     let db = getDatabase()
     let singlefriend = useSelector((single) => single.active.active)
+    let usered = useSelector((state) => state.login.loggedIn)
     let [message, setMessage] = useState('')
     let [allmessage, setAllmessage] = useState([])
-    let usered = useSelector((state) => state.login.loggedIn)
+    let [emojishow, setEmojishow] = useState(false)
 
     let handleSendMessage = () => {
         if (singlefriend?.status == "single") {
@@ -26,6 +28,7 @@ const MessageBox = () => {
             })
         }
         setMessage('')
+        setEmojishow(false)
     }
 
     //  get message
@@ -40,6 +43,10 @@ const MessageBox = () => {
             setAllmessage(messagearr)
         })
     }, [singlefriend.id])
+
+    let handleEmojiselect = ({ emoji }) => {
+        setMessage(message + emoji)
+    }
 
     return (
         <div className='w-full bg-white'>
@@ -99,10 +106,20 @@ const MessageBox = () => {
             <div className='bg-[#F5F5F5] mx-5 py-3 shadow-lg rounded-md flex items-center justify-center'>
                 <div className='w-[450px] bg-[#FFFFFF]  flex justify-center rounded-md gap-2'>
                     <div className='flex justify-center items-center gap-2'>
-                        <EmojiIcon />
+                        <div className='relative'>
+                            <div onClick={() => setEmojishow((prev) => !prev)} className='cursor-pointer'>
+                                <EmojiIcon />
+                            </div>
+                            {
+                                emojishow &&
+                                <div className='absolute bottom-8 -left-10'>
+                                    <EmojiPicker onEmojiClick={handleEmojiselect} />
+                                </div>
+                            }
+                        </div>
                         <ImageIcon />
                     </div>
-                    <input className='py-2 px-2 outline-none w-[60%]' type="text" placeholder='type anything' onChange={(e) => setMessage(e.target.value)} value={message} />
+                    <input className='py-2 px-2 outline-none w-[60%]' type="text" placeholder='type anything' onFocus={() => setEmojishow(false)} onChange={(e) => setMessage(e.target.value)} value={message} />
                     <button className=' font-robotoRegular px-7 bg-[#4A81D3] rounded-md text-white' onClick={handleSendMessage}>Send</button>
                 </div>
             </div>

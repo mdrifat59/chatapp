@@ -79,6 +79,13 @@ const MessageBox = () => {
             }
         );
     }
+    //  press key
+    let handleSendkey =(e)=>{
+        if(e.key == "Enter"){
+            handleSendMessage()
+        }
+        
+    }
     return (
         <div className='w-full bg-white'>
             <div className=' bg-[#232323] py-2 rounded-md mx-5 mt-3 '>
@@ -158,7 +165,7 @@ const MessageBox = () => {
                             <input ref={choosefile} type="file" hidden onChange={handleimage} />
                         </div>
                     </div>
-                    <input className='py-2 px-2 outline-none w-[60%]' type="text" placeholder='type anything' onFocus={() => setEmojishow(false)} onChange={(e) => setMessage(e.target.value)} value={message} />
+                    <input className='py-2 px-2 outline-none w-[60%]' type="text" placeholder='type anything' onKeyUp={handleSendkey} onFocus={() => setEmojishow(false)} onChange={(e) => setMessage(e.target.value)} value={message} />
                     <button className=' font-robotoRegular px-7 bg-[#4A81D3] rounded-md text-white' onClick={handleSendMessage}>Send</button>
                 </div>
             </div>

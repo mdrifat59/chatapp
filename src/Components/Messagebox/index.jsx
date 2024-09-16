@@ -16,6 +16,7 @@ const MessageBox = () => {
     let [allmessage, setAllmessage] = useState([])
     let [emojishow, setEmojishow] = useState(false)
     let choosefile = useRef(null)
+    let scrollRef = useRef()
 
     let handleSendMessage = () => {
         if (singlefriend?.status == "single") {
@@ -86,6 +87,12 @@ const MessageBox = () => {
         }
         
     }
+    // scroll down
+    useEffect (()=>{
+        scrollRef.current?.scrollIntoView({
+            behavior:"smooth",
+        })
+    },[message])
     return (
         <div className='w-full bg-white'>
             <div className=' bg-[#232323] py-2 rounded-md mx-5 mt-3 '>
@@ -102,7 +109,7 @@ const MessageBox = () => {
                 {
                     singlefriend?.status == "single" ?
                         allmessage.map((item, i) => (
-                            <div key={item.id}>
+                            <div key={item.id} ref={scrollRef}>
                                 {
                                     item.whosendid == usered.uid ? (
                                         item.image ?
